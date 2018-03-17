@@ -74,34 +74,87 @@ public class CECS323JavaTermProject {
             stmt = conn.createStatement();
             
             String sql;
+            ResultSet rs;
             
-            // START - LIST ALL WRITING GROUPS
-            
-            // sql = "SELECT au_id, au_fname, au_lname, phone FROM Authors";
-            sql = "SELECT groupName FROM writingGroup";
-            ResultSet rs = stmt.executeQuery(sql);
+            // START - LIST ALL WRITING GROUPS ////////////////////////////////////////////////////////////////////
 
-            //STEP 5: Extract data from result set
-            // System.out.printf(displayFormat, "ID", "First Name", "Last Name", "Phone #");
-            
-            System.out.println("List all Writing Groups:");
-            
-            // System.out.printf(displayFormat, "groupName", "headWriter", "yearFormed", "subject");
-            while (rs.next()) {
-                //Retrieve by column name
-                
-                //String id = rs.getString("au_id");
-                //String phone = rs.getString("phone");
-                //String first = rs.getString("au_fname");
-                //String last = rs.getString("au_lname");
-                
-                String groupName = rs.getString("groupName");
+            sql = "SELECT groupName FROM writingGroup"; 
+            rs = stmt.executeQuery(sql);
+            listSpecificAttribute(rs, "writingGroup");
 
-                //Display values
-                //System.out.printf(displayFormat, dispNull(id), dispNull(first), dispNull(last), dispNull(phone));
-                System.out.printf("%-10s    ", dispNull(groupName));
-            }
-            // END - LIST ALL WRITING GROUPS
+            
+            // END ////////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - LIST ALL FOR A SPECIFIC WRITING GROUP PROVIDED BY USER /////////////////////////////////////
+            System.out.println("Which writing group do you want to details of?");
+            sql = "SELECT * FROM writingGroup WHERE groupName = '?'";
+            PreparedStatement pstmt = conn.prepareStatement(sql);
+            ResultSetMetaData rsmd = rs.getMetaData();
+            pstmt.setString(1, rsmd.getColumnClassName(1));
+            
+            rs = stmt.executeQuery(sql);
+            
+//            while (rs.next()) {
+//                //Retrieve by column name                
+//                String actualAttribute = rs.getString(relativeAttribute);
+//
+//                //Display values
+//                System.out.printf("%-10s    ", dispNull(actualAttribute));
+//            }
+//           } catch (Exception e) {
+//            e.printStackTrace();
+//        }
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - LIST ALL PUBLISHERS ///////////////////////////////////////////////////////////////////////
+            
+            sql = "SELECT publisherName FROM publishers";
+            rs = stmt.executeQuery(sql);
+            listSpecificAttribute(rs, "publisherName");
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - LIST ALL THE DATA FOR A PUBLISHER SPECIFIED BY THE USER ///////////////////////////////////
+            
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - LIST ALL BOOK TITLES //////////////////////////////////////////////////////////////////////
+            
+            sql = "SELECT bookTitle FROM books";
+            rs = stmt.executeQuery(sql);
+            listSpecificAttribute(rs, "bookTitle");
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - LIST ALL THE DATA FOR A BOOK SPECIFIED BY THE USER ////////////////////////////////////////
+            
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - INSERT A NEW BOOK /////////////////////////////////////////////////////////////////////////
+            
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - INSERT A NEW PULISHER AND UPDATE ALL BOOKS PUBLISHED BY ONE PUBLISHER TO //////////////////
+            //         BE THE NEW PUBLISHER. LEAVE THE OLD PUBLISHER ALONE, JUST MODIFY THE BOOKS ////////////////
+            //         THAT THEY HAVE PUBLISHED                                                     //////////////
+            
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
+            
+            // START - REMOVE A BOOK SPECIFIED BY THE USER ///////////////////////////////////////////////////////
+            
+            
+            
+            // END ///////////////////////////////////////////////////////////////////////////////////////////////
             
             //STEP 6: Clean-up environment
             rs.close();
@@ -131,5 +184,21 @@ public class CECS323JavaTermProject {
         }//end try
         System.out.println("\nGoodbye!");
     }//end main
-}//end FirstExample}
+    
+    public static void listSpecificAttribute(ResultSet rs, String relativeAttribute) {
+        try {
+            //STEP 5: Extract data from result set            
+            System.out.println("\nList All Writing Groups:");
+            while (rs.next()) {
+                //Retrieve by column name                
+                String actualAttribute = rs.getString(relativeAttribute);
+
+                //Display values
+                System.out.printf("%-10s    ", dispNull(actualAttribute));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+}//end FirstExample
 
